@@ -13,18 +13,22 @@ app.use(express.json());
 const uri = `mongodb+srv://${process.env.EMA_USER}:${process.env.EMA_PASS}@cluster0.zxk0y.mongodb.net/?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
-async function run () {
-    try{
+async function run() {
+    try {
         const productCollection = client.db("emaJohn").collection("product");
 
-        app.get('/product', async(req,res) =>{
+        app.get('/product', async (req, res) => {
             const query = {};
             const cursor = productCollection.find(query);
             const result = await cursor.toArray();
             res.send(result);
         });
+
+        app.post('/product', async (req, res) => {
+            res.send();
+        })
     }
-    finally{}
+    finally { }
 }
 
 run().catch(console.dir);
