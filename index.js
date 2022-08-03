@@ -17,17 +17,20 @@ async function run() {
     try {
         const productCollection = client.db("emaJohn").collection("product");
 
-        app.get('/product', async (req, res) => {
+        app.get('/products', async (req, res) => {
             const query = {};
             const cursor = productCollection.find(query);
             const result = await cursor.toArray();
             res.send(result);
         });
 
-        app.post('/product', async (req, res) => {
-            
-            res.send();
-        })
+        // count all products
+        app.get('/productCount', async (req, res) => {
+            const query = {};
+            const cursor = productCollection.find(query);
+            const count = await cursor.count();
+            res.send({count});
+        });
     }
     finally { }
 }
