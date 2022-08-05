@@ -18,18 +18,25 @@ async function run() {
         const productCollection = client.db("emaJohn").collection("product");
 
         app.get('/products', async (req, res) => {
+            const page = parseInt(req.query.page);
+            const itemCount = parseInt(req.query.itemCount);
+            
             const query = {};
             const cursor = productCollection.find(query);
-            const result = await cursor.toArray();
+
+            let result;
+            if (page || itemCount){
+                result = await cursor.skip(page*itemCount).limit(itemCount).toArray();
+            }
+            else{
+                result = await cursor.toArray();
+            }
             res.send(result);
         });
 
         // count all products
         app.get('/productCount', async (req, res) => {
-            const query = {};
-            const cursor = productCollection.find(query);
-            // const count = await cursor.count();
-            const count = await cursor.estimatedDocumentCount();
+            const count = await productCollection.estimatedDocumentCount();
             res.send({count});
         });
     }
